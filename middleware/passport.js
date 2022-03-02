@@ -13,5 +13,30 @@ async function validateUser(username, password, done){
     if (!user){
         return done(null, false, {message: 'Invalid Username or Password'});
     }
-    return done(null, {id:user.id});
+    return done(null, {id: user.id});
 }
+
+passport.use(
+    new Strategy({
+            usernameField: 'email',
+            passwordField: 'password'
+        }, validateUser
+    )
+);
+
+passport.serializeUser(function(user, done ){
+    process.nextTick(function(){
+        done(null, {
+            id:user.id
+        })
+    })
+});
+
+passport.deserializeUser(async function(user, done){
+    const userModel = await User.findByPk(user.id);
+    process.nextTick(function(){
+        return done(null, userModel);
+    });
+});
+
+module.exports.passport = passport;
