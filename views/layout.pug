@@ -13,8 +13,8 @@ html
             li
               a(href="/courses") Courses
             if user.can('view self')
-            li
-              a(href="/students") Students
+              li
+                a(href="/students") Students
             if user.can('view self')
               li
                 a(href=`/students/profile/${user.student.id}`) Profile
